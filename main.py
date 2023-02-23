@@ -19,14 +19,21 @@ def getdatafile(datafile,folder)-> pd.DataFrame:
     dataframe=pd.DataFrame()
     ipfile=folder+datafile
     try:
-        if FileExists(ipfile):
-            dataframe=pd.read_excel(ipfile,sheet_name='Sheet1')
-        else:
+        if not FileExists(ipfile):
             print(f'Cannot find input file {ipfile}')
-    except Exception as err:  
-        print(f'Failed getting input file {datafile}')
-        print(err)
-    return dataframe
+            return dataframe
+        with pd.ExcelFile(ipfile) as xls:
+            dataframe = pd.read_excel(xls, sheet_name='Sheet1')
+    except pd.errors.EmptyDataError as e:
+        print(f"Error: file '{ipfile}' is empty.")
+    except FileNotFoundError as e:
+        print(f"Error: file '{ipfile}' not found.")
+    except PermissionError as e:
+        print(f"Error: permission denied for file '{ipfile}'.")
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        return dataframe
 
 pvdf=getdatafile(pvinfile,folder)
 sapdf = getdatafile(sapinfile,folder)
@@ -34,7 +41,7 @@ sapdf = getdatafile(sapinfile,folder)
 def createresultsdf(sapf:pd.DataFrame,pvdf:pd.DataFrame)-> pd.DataFrame:
     ##This method sizes an empty df with 'NA' the same size as the passed df and uses the same columns
     copyDF=pvdf.copy()
-    copyDF.rename(columns = {'TAG':'PVTAG'}, inplace = True) # best not to have two columns with the same name
+    copyDF.rename(columns = {'TAG':'PVTAG'}, inplace = True) ## best not to have two columns with the same name
     copyDF[:]='NA'
     return pd.concat([sapf,copyDF],axis=1) ##merge the two df together tho get one new one that includes a default NA for all cells
 
@@ -72,7 +79,7 @@ def comparedf(sapdf:pd.DataFrame, pvfile:pd.DataFrame)-> pd.DataFrame:
         for index,row in sapdf.iterrows():
             lookup=pvfile.loc[pvfile['TAG'] == row['TAG']]  #this generates a dataframe containing the matched PV row
             if not lookup.empty:
-                print(f'{row["TAG"]} matched in PVfile')
+                ##print(f'{row["TAG"]} matched in PVfile')
                 assignmatchrow(index,sapdf,lookup)
         return sapdf
         
