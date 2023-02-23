@@ -8,13 +8,14 @@ sapOutfile= "\sap-results.xlsx"
 folder=os.path.dirname(__file__)
 
 
-def FileExists(file,isfolder=False):
-        if isfolder:
-            return os.path.isdir(file)
-        else:
-            return os.path.isfile(file)
+def FileExists(file,isfolder=False)-> bool:
+   
+    if isfolder:
+        return os.path.isdir(file)
+    else:
+        return os.path.isfile(file)
 
-def getdatafile(datafile,folder):
+def getdatafile(datafile,folder)-> pd.DataFrame:
     dataframe=pd.DataFrame()
     ipfile=folder+datafile
     try:
@@ -22,8 +23,6 @@ def getdatafile(datafile,folder):
             dataframe=pd.read_excel(ipfile,sheet_name='Sheet1')
         else:
             print(f'Cannot find input file {ipfile}')
-        #dataframe=pd.read_csv(datafile, na_values=[' '],keep_default_na=False,dtype=str, sep=";")
-
     except Exception as err:  
         print(f'Failed getting input file {datafile}')
         print(err)
@@ -32,7 +31,7 @@ def getdatafile(datafile,folder):
 pvdf=getdatafile(pvinfile,folder)
 sapdf = getdatafile(sapinfile,folder)
 
-def createresultsdf(sapf:pd.DataFrame,pvdf:pd.DataFrame):
+def createresultsdf(sapf:pd.DataFrame,pvdf:pd.DataFrame)-> pd.DataFrame:
     ##This method sizes an empty df with 'NA' the same size as the passed df and uses the same columns
     copyDF=pvdf.copy()
     copyDF.rename(columns = {'TAG':'PVTAG'}, inplace = True) # best not to have two columns with the same name
@@ -51,19 +50,28 @@ def assignmatchrow(index:int,sapdf:pd.DataFrame,matchedrow:pd.DataFrame):
         print(err)   
 
 
-def excelsave(df:pd.DataFrame, file:str,sheet:str='Sheet1'):
+def excelsave(df: pd.DataFrame, file: str, sheet: str = 'Sheet1') -> bool:
     try:
-        df.to_excel(file,sheet_name=sheet,index = False)
-    except Exception as err:
-        print(f"Error in compare_spo_to_sap \n{err}")
+        with pd.ExcelWriter(file) as writer:
+            df.to_excel(writer, sheet_name=sheet, index=False)
+        return True
+    except FileNotFoundError as e:
+        print(f"Error: file '{file}' not found.")
+        return False
+    except PermissionError as e:
+        print(f"Error: permission denied for file '{file}'.")
+        return False
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
 
 
-def comparedf(sapdf:pd.DataFrame, pvfile:pd.DataFrame):
+
+def comparedf(sapdf:pd.DataFrame, pvfile:pd.DataFrame)-> pd.DataFrame:
     try:
-
         for index,row in sapdf.iterrows():
             lookup=pvfile.loc[pvfile['TAG'] == row['TAG']]  #this generates a dataframe containing the matched PV row
-            if lookup.empty==False:
+            if not lookup.empty:
                 print(f'{row["TAG"]} matched in PVfile')
                 assignmatchrow(index,sapdf,lookup)
         return sapdf
