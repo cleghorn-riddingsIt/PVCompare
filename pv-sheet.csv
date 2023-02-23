@@ -1,0 +1,7 @@
+TAG,type,name,description,parents,tagnumber,pandid,purpose,maintainablegroup,hazardousareaclassification,links,groups,_version,_ancestors,_haschildren,_hascycle,_isorphaned,_groupAssociations,_source
+"1350-1,5-WG-554-0-327-FC11",equipment,"1350-1,5-WG-554-0-327-FC11","1,5 IN, FRESH COOL W. L., WATER GLYC SYS",system/1350-554-PIPING,,,,,,,,0,"site/5, system/1350-554-PIPING, system/1350-PIPING",FALSE,FALSE,FALSE,,Import
+1350-12-GN-525-0-303-DC91,equipment,1350-12-GN-525-0-303-DC91,"12 IN, NAT GAS L., PROCESS PLANT",system/1350-525-PIPING,,,,,,,,0,"site/5, system/1350-525-PIPING, system/1350-PIPING",FALSE,FALSE,FALSE,,Import
+1350-1-AP-563-0-328-GG12,equipment,1350-1-AP-563-0-328-GG12,"1 IN, PLANT AIR L., COMPRESSED AIR SYS",system/1350-563-PIPING,,,,,,,,0,"site/5, system/1350-563-PIPING, system/1350-PIPING",FALSE,FALSE,FALSE,,Import
+1350-1-AP-563-0-329-GG12,equipment,1350-1-AP-563-0-329-GG12,"1 IN, PLANT AIR L., COMPRESSED AIR SYS",system/1350-563-PIPING,,,,,,,,0,"site/5, system/1350-563-PIPING, system/1350-PIPING",FALSE,FALSE,FALSE,,Import
+1350-1-FO-571-0-301-AC02,equipment,1350-1-FO-571-0-301-AC02,"1 IN, FUEL OIL, FIRE WATER SYS",system/1350-571-PIPING,,,,,,,,0,"site/5, system/1350-571-PIPING, system/1350-571",FALSE,FALSE,FALSE,,Import
+1350-577-GE-0658,equipment,1350-577-GE-0658,REGISTER INLET EXTRACTION FAN 1 LVS,equipment/1350-577-GK-0651,,,,,,,,0,"site/5, equipment/1350-577-GK-0651, system/1350-577-06-AIR, system/1350-577-06, system/1350-577",TRUE,FALSE,FALSE,,Import
