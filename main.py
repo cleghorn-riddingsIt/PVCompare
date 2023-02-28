@@ -76,6 +76,8 @@ def excelsave(df: pd.DataFrame, file: str, sheet: str = 'Sheet1') -> bool:
 
 def comparedf(sapdf:pd.DataFrame, pvfile:pd.DataFrame)-> pd.DataFrame:
     try:
+        pvfile['TAG']=pvfile['TAG'].str.replace(" ","")
+        sapdf['TAG']=sapdf['TAG'].str.replace(" ","")
         for index,row in sapdf.iterrows():
             lookup=pvfile.loc[pvfile['TAG'] == row['TAG']]  #this generates a dataframe containing the matched PV row
             if not lookup.empty:
