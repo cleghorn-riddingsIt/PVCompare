@@ -2,9 +2,9 @@ import pandas as pd
 import os
 import numpy as np
 
-pvinfile="\pv-sheet.xlsx"
-sapinfile = "\sap-sheet.xlsx"
-sapOutfile= "\sap-results.xlsx"
+pvinfile="/pv-sheet.xlsx"
+sapinfile = "/sap-sheet.xlsx"
+sapOutfile= "/sap-results.xlsx"
 folder=os.path.dirname(__file__)
 
 
