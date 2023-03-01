@@ -38,12 +38,20 @@ def getdatafile(datafile,folder)-> pd.DataFrame:
 pvdf=getdatafile(pvinfile,folder)
 sapdf = getdatafile(sapinfile,folder)
 
-def createresultsdf(sapf:pd.DataFrame,pvdf:pd.DataFrame)-> pd.DataFrame:
+# def createresultsdf(sapf:pd.DataFrame,pvdf:pd.DataFrame)-> pd.DataFrame:
+#     ##This method sizes an empty df with 'NA' the same size as the passed df and uses the same columns
+#     copyDF=pvdf.copy()
+#     copyDF.rename(columns = {'TAG':'PVTAG'}, inplace = True) ## best not to have two columns with the same name
+#     copyDF[:]='NA'
+#     return pd.concat([sapf,copyDF],axis=1) ##merge the two df together tho get one new one that includes a default NA for all cells
+
+
+def CreateResultsDF(sapdf:pd.DataFrame,pvdf:pd.DataFrame)-> pd.DataFrame:
     ##This method sizes an empty df with 'NA' the same size as the passed df and uses the same columns
-    copyDF=pvdf.copy()
-    copyDF.rename(columns = {'TAG':'PVTAG'}, inplace = True) ## best not to have two columns with the same name
-    copyDF[:]='NA'
-    return pd.concat([sapf,copyDF],axis=1) ##merge the two df together tho get one new one that includes a default NA for all cells
+    na_array = np.full_like(np.empty((len(sapdf),len(pvdf.columns)), dtype='U3'), 'NA')
+    emptyPvdf = pd.DataFrame(na_array, columns=pvdf.columns)
+    emptyPvdf.rename(columns = {'TAG':'PVTAG'}, inplace = True) ## best not to have two columns with the same name
+    return pd.concat([sapdf,emptyPvdf],axis=1) ##merge the two df together tho get one new one that includes a default NA for all cells 
 
 
 def assignmatchrow(index:int,sapdf:pd.DataFrame,matchedrow:pd.DataFrame):
@@ -91,7 +99,7 @@ def comparedf(sapdf:pd.DataFrame, pvfile:pd.DataFrame)-> pd.DataFrame:
 
         
         
-newSapDf=createresultsdf(sapdf,pvdf) ## generate a new df with all cells=NA and right merge it to the sap df
+newSapDf=CreateResultsDF(sapdf,pvdf) ## generate a new df with all cells=NA and right merge it to the sap df
 comparedf(newSapDf, pvdf) # pass in the new resized sap DF instead of the original one
 
 excelsave(newSapDf,folder+sapOutfile)
